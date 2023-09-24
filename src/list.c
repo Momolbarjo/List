@@ -3,6 +3,8 @@
 #include <time.h>
 #include "list.h"
 
+void ClearScreen() { printf("\033[H\033[J");}
+
 char getch() {
     char buf = 0;
     struct termios old = {0};
@@ -45,7 +47,7 @@ List add_Chainon( int x)
 
     if(element == NULL)
     {
-        fprintf(stderr,"Erreur: Probleme d'allocation dynamique.\n");
+        fprintf(stderr,"Error of memory allocation\n");
         exit(1);
 
     }
@@ -65,6 +67,16 @@ Bool is_list_empty(List li){
     return false;
 }
 
+Bool is_listd_empty(Liststd li){
+
+    if (li == NULL){
+        return true;
+    }
+
+    return false;
+}
+
+
 int list_length(List li)
 {
     int size=0;
@@ -83,7 +95,7 @@ void print_list(List li)
 {
     if(is_list_empty(li))
     {
-        printf("La liste est vide\n");
+        printf("The list is empty\n");
         return;
     }
 
@@ -103,6 +115,32 @@ void print_list(List li)
 
     printf("\n");
 
+}
+
+void print_listd(Liststd li)
+{
+    if (is_listd_empty(li))
+    {
+        printf("The list is empty\n");
+        return;
+    }
+
+    while (li != NULL)
+    {
+        printf("Name: %s\n", li->std.name);
+        printf("First Name: %s\n", li->std.firstName);
+        printf("Group: %d\n", li->std.grp);
+        printf("Notes: ");
+        for (int i = 0; i < NB_NOTES; i++)
+        {
+            printf("%d ", li->std.notes[i]);
+        }
+        
+        printf("\n");
+        printf("\n");
+        li = li->next;
+    }
+    
 }
 
 List push_back_list(List li, int x)
@@ -197,7 +235,7 @@ List pop_front_list(List li)
 
     if(element == NULL)
     {
-        fprintf(stderr,"Erreur: Probleme d'allocation dynamique.\n");
+        fprintf(stderr,"Error of memory allocation.\n");
         exit(1);
 
     }
@@ -227,7 +265,7 @@ List clear_list(List li)
 
 List sortList(List li) {
     if (li == NULL || li->next == NULL) {
-        return li; // La liste est déjà triée ou vide
+        return li; 
     }
 
     List sortedList = NULL;
@@ -254,11 +292,11 @@ List insertSorted(List li, int x) {
 
     if (previous == NULL) {
         newelem->next = li;
-        return newelem; // Nouveau nœud devient la nouvelle tête de liste
+        return newelem; // 
     } else {
         previous->next = newelem;
         newelem->next = current;
-        return li; // La tête de liste reste inchangée
+        return li; 
     }
 }
 
@@ -334,7 +372,7 @@ List reverse_list(List li) {
         previous = current;
         current = following;
     }
-
+    
     li = previous;
 
     return li;
@@ -342,29 +380,65 @@ List reverse_list(List li) {
 
 Liststd addStudent(Liststd lst)
 {
-      Liststd* newStudent = malloc(sizeof(Student));
+      Liststd newStudent = malloc(sizeof(LstStudents));
 
     if (newStudent == NULL) {
         printf("Error of memory allocation.\n");
         return lst;
     }
 
-    printf("What's the name of the student: ");
-    scanf("%s", newStudent->name);
+    printf("\nWhat's the name of the student: ");
+    scanf("%14s", newStudent->std.name);
+    getchar();
 
     printf("\nWhat's the firstname of the student :");
-    scanf("%s",newStudent->firstName);
+    scanf("%14s",newStudent->std.firstName);
+    getchar();
 
     printf("\nIn which group is the student : ");
-    scanf("%d",&newStudent->grp);
+    scanf("%1d",&newStudent->std.grp);
+    getchar();
 
     srand(time(NULL));
     for(int i=0;i<NB_NOTES;i++)
     {
-        newStudent->notes[i]=rand()%21;
+        newStudent->std.notes[i]=rand()%21;
 
     }
+    
+    ClearScreen();
 
-    newStudent->next = lst;
-    return newStudent;
+    newStudent->next = NULL; 
+
+    if (lst == NULL) {
+        return newStudent;
+    }
+
+    
+    Liststd current = lst;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+
+    current->next = newStudent; 
+    return lst;   
+}
+
+void Listbygrp(Liststd lst, int grp)
+{
+    Liststd filtered = lst;
+    int found = 0;
+    while(filtered != NULL)
+    {
+        if(filtered->std.grp == grp)
+        {
+            printf("%s %s is in the groupe %d\n",filtered->std.name,filtered->std.firstName,grp);
+            found++;
+        }
+        filtered = filtered->next;
+    }
+    if(!found)
+    {
+        printf("Nobody is in this group!\n");
+    }
 }
