@@ -5,7 +5,8 @@
 
 int main(void)
 {
-    List mylist = new_list();
+    //List mylist = new_list();
+    Liststd stdlst = NULL;
     srand(time(NULL));
 
     /*int size=0;
@@ -67,7 +68,7 @@ int main(void)
     printf("nombre d'elements : %d\n",list_length(mylist));
 
     mylist=sortList(mylist);
-    print_list(mylist);*/
+    print_list(mylist);
 
     for(int i=0;i<10;i++)
     {
@@ -76,8 +77,14 @@ int main(void)
     }
 
     print_list(mylist);
-    mylist=pop_element_list(mylist,2);
+    mylist=pop_all_element_list(mylist,2);
     print_list(mylist);
+
+    mylist=reverse_list(mylist);
+    print_list(mylist);*/
+
+    stdlst=addStudent(stdlst);
+    print_list(stdlst);
     
     return 0;
 }
