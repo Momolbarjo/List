@@ -84,7 +84,19 @@ int main(void)
     print_list(mylist);*/
 
     stdlst=addStudent(stdlst);
-    print_list(stdlst);
+    print_listd(stdlst);
+    stdlst=addStudent(stdlst);
+    print_listd(stdlst);
+    Listbygrp(stdlst,2);
+
+
+    
+    while (stdlst != NULL)
+    {
+        Liststd temp = stdlst;
+        stdlst = stdlst->next;
+        free(temp);
+    }
     
     return 0;
 }
