@@ -34,6 +34,7 @@ typedef struct  LstStudents
 
 
 char getch();
+void ClearScreen();
 List new_list(void);
 List add_Chainon( int x);
 Bool is_list_empty(List li);
@@ -51,8 +52,9 @@ List pop_element_list(List li,int value);
 List pop_all_element_list(List li, int value);
 List reverse_list(List li);
 Liststd addStudent(Liststd lst);
-
-
+void print_listd(Liststd li);
+Bool is_listd_empty(Liststd li);
+void Listbygrp(Liststd lst, int grp);
 
 #endif
 
