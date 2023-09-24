@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "list.h"
 
 char getch() {
@@ -291,29 +292,79 @@ List pop_element_list(List li, int value) {
 }
 
 List pop_all_element_list(List li, int value) {
-    if (is_list_empty(li)) {
-        return li; 
-    }
-
     ListElement* current = li;
     ListElement* previous = NULL;
+    ListElement* next = NULL;
 
-    while (current != NULL && current->nb != value) {
-        previous = current;
-        current = current->next;
+    while (current != NULL) {
+        next = current->next;  
+        
+        if (current->nb == value) {
+            if (previous == NULL) {
+               
+                li = next;
+                free(current);
+            } else {
+                previous->next = next;
+                free(current);
+            }
+        } else {
+            previous = current;
+        }
+        
+        current = next;  
     }
-
-    if (current == NULL) {
-        return li;
-    }
-
-    if (previous == NULL) {
-        li = li->next;
-    } else {
-        previous->next = current->next;
-    }
-
-    free(current);
 
     return li;
+}
+
+
+List reverse_list(List li) {
+    ListElement* current = li;
+    ListElement* previous = NULL;
+    ListElement* following = NULL;
+
+    while (current != NULL) {
+        following = current->next;  
+
+        
+        current->next = previous;
+
+        
+        previous = current;
+        current = following;
+    }
+
+    li = previous;
+
+    return li;
+}
+
+Liststd addStudent(Liststd lst)
+{
+      Liststd* newStudent = malloc(sizeof(Student));
+
+    if (newStudent == NULL) {
+        printf("Error of memory allocation.\n");
+        return lst;
+    }
+
+    printf("What's the name of the student: ");
+    scanf("%s", newStudent->name);
+
+    printf("\nWhat's the firstname of the student :");
+    scanf("%s",newStudent->firstName);
+
+    printf("\nIn which group is the student : ");
+    scanf("%d",&newStudent->grp);
+
+    srand(time(NULL));
+    for(int i=0;i<NB_NOTES;i++)
+    {
+        newStudent->notes[i]=rand()%21;
+
+    }
+
+    newStudent->next = lst;
+    return newStudent;
 }
