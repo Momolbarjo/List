@@ -1,5 +1,7 @@
 #ifndef LIST_H
 #define LIST_H
+#define NB_NOTES 10
+
 #include <termios.h>
 
 typedef enum
@@ -13,6 +15,23 @@ typedef struct  ListElement
     int nb;
     struct ListElement* next;
 }ListElement, *List;
+
+typedef struct Student
+{
+    char name[15];
+    char firstName[15];
+    int grp;
+    int notes[NB_NOTES];
+
+} Student;
+
+typedef struct  LstStudents
+{
+    Student std;
+    struct LstStudents* next;
+}LstStudents, *Liststd;
+
+
 
 char getch();
 List new_list(void);
@@ -29,6 +48,10 @@ List make_list_increasing(List li);
 List insertSorted(List li, int x);
 List sortList(List li);
 List pop_element_list(List li,int value);
+List pop_all_element_list(List li, int value);
+List reverse_list(List li);
+Liststd addStudent(Liststd lst);
+
 
 
 #endif
