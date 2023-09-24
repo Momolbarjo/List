@@ -1,9 +1,56 @@
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 #include "list.h"
 
 int main(void)
 {
     List mylist = new_list();
+    srand(time(NULL));
+
+    /*int size=0;
+    Bool end=false;
+    long tmp=2;
+    
+
+    printf("Combien de puissances de 2 voulez vous voir?\n");
+    scanf("%d",&size);
+
+    for(int i=0;i<size;i++)
+    {
+    
+        mylist = push_back_list(mylist,tmp);
+        tmp*=2;
+
+    }
+
+    print_list(mylist);
+
+    while(!end)
+    {
+
+        printf("Voulez-vous continuer? (y/n)\n");
+        int choice = getch(); 
+        
+        if(choice=='y')
+        {
+            mylist = push_back_list(mylist,tmp);
+            print_list(mylist);
+            tmp*=2;
+        
+        }
+        else if(choice== 'n')
+        {
+            end=true;
+        }
+        else{
+            printf("Merci de ressaisir\n");
+        }
+        
+    }
+
+    clear_list(mylist);
+
 
     print_list(mylist);
 
@@ -19,10 +66,18 @@ int main(void)
 
     printf("nombre d'elements : %d\n",list_length(mylist));
 
-    print_list(clear_list(mylist));
-    //print_list(pop_front_list(mylist));
+    mylist=sortList(mylist);
+    print_list(mylist);*/
+
+    for(int i=0;i<10;i++)
+    {
+        int randvalue= rand()%6;
+        mylist=push_back_list(mylist,randvalue);
+    }
+
+    print_list(mylist);
+    mylist=pop_element_list(mylist,2);
+    print_list(mylist);
     
-
-
     return 0;
 }
