@@ -2,7 +2,34 @@
 #include <stdlib.h>
 #include "list.h"
 
+char getch() {
+    char buf = 0;
+    struct termios old = {0};
 
+    if (tcgetattr(0, &old) < 0)
+        perror("tcsetattr()");
+    // Get the terminal attributes for the standard input (0) and store them in the old struct.
+    // If tcgetattr() returns a value less than 0, an error occurred, and perror() prints an error message.
+
+    old.c_lflag &= ~ICANON;// Disable canonical mode in the local flags of the terminal attributes.
+    old.c_lflag &= ~ECHO;  // Disable echoing of input characters in the local flags of the terminal attributes.
+    old.c_cc[VMIN] = 1;// Set the minimum number of characters to read to 1.
+    old.c_cc[VTIME] = 0;// Set the timeout in tenths of a second to 0.
+
+    if (tcsetattr(0, TCSANOW, &old) < 0)
+        perror("tcsetattr ICANON");// Set the terminal attributes for the standard input (0) to the modified attributes stored in the old struct.
+
+    if (read(0, &buf, 1) < 0)
+        perror ("read()"); // Read a single character from the standard input (0) and store it in the buf variable.
+
+    old.c_lflag |= ICANON;
+    old.c_lflag |= ECHO;
+
+    if (tcsetattr(0, TCSADRAIN, &old) < 0)
+        perror ("tcsetattr ~ICANON");// Set the terminal attributes for the standard input (0) to the modified attributes stored in the old struct.
+
+    return buf;
+}
 
 List new_list(void)
 {
@@ -79,19 +106,7 @@ void print_list(List li)
 
 List push_back_list(List li, int x)
 {
-    ListElement *element;
-
-    element= malloc(sizeof(*element));
-
-    if(element == NULL)
-    {
-        fprintf(stderr,"Erreur: Probleme d'allocation dynamique.\n");
-        exit(1);
-
-    }
-
-    element->nb = x;
-    element->next = NULL;
+    ListElement *element = add_Chainon(x);
 
     if(is_list_empty(li))
     {
@@ -115,18 +130,8 @@ List push_back_list(List li, int x)
 List push_front_list(List li,int x)
 {
 
-    ListElement *element;
+    ListElement *element= add_Chainon(x);
 
-    element= malloc(sizeof(*element));
-
-    if(element == NULL)
-    {
-        fprintf(stderr,"Erreur: Probleme d'allocation dynamique.\n");
-        exit(1);
-
-    }
-
-    element->nb = x;
 
     if(is_list_empty(li))
     {
@@ -187,7 +192,6 @@ List pop_front_list(List li)
     }
 
     ListElement *element;
-
     element= malloc(sizeof(*element));
 
     if(element == NULL)
@@ -196,6 +200,7 @@ List pop_front_list(List li)
         exit(1);
 
     }
+
 
     element = li->next;
 
@@ -217,4 +222,98 @@ List clear_list(List li)
         li = pop_front_list(li);
     }
 
+}
+
+List sortList(List li) {
+    if (li == NULL || li->next == NULL) {
+        return li; // La liste est déjà triée ou vide
+    }
+
+    List sortedList = NULL;
+    ListElement* current = li;
+
+    while (current != NULL) {
+        ListElement* next = current->next;
+        sortedList = insertSorted(sortedList, current->nb);
+        current = next;
+    }
+
+    return sortedList;
+}
+
+List insertSorted(List li, int x) {
+    ListElement* newelem = add_Chainon(x);
+    ListElement* current = li;
+    ListElement* previous = NULL;
+
+    while (current != NULL && current->nb < x) {
+        previous = current;
+        current = current->next;
+    }
+
+    if (previous == NULL) {
+        newelem->next = li;
+        return newelem; // Nouveau nœud devient la nouvelle tête de liste
+    } else {
+        previous->next = newelem;
+        newelem->next = current;
+        return li; // La tête de liste reste inchangée
+    }
+}
+
+
+List pop_element_list(List li, int value) {
+    if (is_list_empty(li)) {
+        return li; 
+    }
+
+    ListElement* current = li;
+    ListElement* previous = NULL;
+
+    while (current != NULL && current->nb != value) {
+        previous = current;
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        return li;
+    }
+
+    if (previous == NULL) {
+        li = li->next;
+    } else {
+        previous->next = current->next;
+    }
+
+    free(current);
+
+    return li;
+}
+
+List pop_all_element_list(List li, int value) {
+    if (is_list_empty(li)) {
+        return li; 
+    }
+
+    ListElement* current = li;
+    ListElement* previous = NULL;
+
+    while (current != NULL && current->nb != value) {
+        previous = current;
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        return li;
+    }
+
+    if (previous == NULL) {
+        li = li->next;
+    } else {
+        previous->next = current->next;
+    }
+
+    free(current);
+
+    return li;
 }
