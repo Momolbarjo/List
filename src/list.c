@@ -474,21 +474,29 @@ Liststd findStudent(char* name, char* firstname, Liststd lst)
 }
 
 
-double AverageAllStudents(Liststd lst) {
+double AverageAllStudents(Liststd lst, char worstStudent[30]) {
     double average = 0.0;
-    char worstStudent[30];
+    double minAverage = 101.0; 
     int count = 0;
 
     Liststd current = lst;
     while (current != NULL) {
-        average += moyTab(current->std.notes,NB_NOTES);
+        double studentAverage = moyTab(current->std.notes, NB_NOTES);
+        average += studentAverage;
         count++;
+
+        if (studentAverage < minAverage) {
+            minAverage = studentAverage;
+            snprintf(worstStudent, 30, "%s %s", current->std.name, current->std.firstName);
+        }
+
         current = current->next;
     }
 
     if (count > 0) {
-        return average / count;
+        average /= count;
     } else {
-        return 0.0; 
+        average = 0.0;
     }
+    return average;
 }
