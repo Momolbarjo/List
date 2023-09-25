@@ -83,13 +83,30 @@ int main(void)
     mylist=reverse_list(mylist);
     print_list(mylist);*/
 
+    
     stdlst=addStudent(stdlst);
     print_listd(stdlst);
     stdlst=addStudent(stdlst);
     print_listd(stdlst);
-    Listbygrp(stdlst,2);
+    //Listbygrp(stdlst,2);
+    
+    if(findStudent("r","a",stdlst)==NULL)
+    {
+    	printf("The student doesn't exist\n");
+    }
+    else
+    {	printf("La moyenne de l'eleve est de %f\n",moyTab(stdlst->std.notes,NB_NOTES));
+    }
+    
+    if(AverageAllStudents(stdlst)==0.0)
+    {
+    	printf("There is no students\n");
+    }
+    else
+    {
+    	printf("La moyenne de toute la promo est de %f\n",AverageAllStudents(stdlst));
 
-
+   }
     
     while (stdlst != NULL)
     {
@@ -97,6 +114,6 @@ int main(void)
         stdlst = stdlst->next;
         free(temp);
     }
-    
+        
     return 0;
 }
