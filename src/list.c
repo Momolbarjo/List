@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "list.h"
 
 void ClearScreen() { printf("\033[H\033[J");}
@@ -440,5 +441,54 @@ void Listbygrp(Liststd lst, int grp)
     if(!found)
     {
         printf("Nobody is in this group!\n");
+    }
+}
+
+double moyTab(int* tab,int N)
+{	
+	double somme = 0.0;
+	
+	for(int i=0;i<N;i++)
+	{	
+		somme += tab[i];
+		
+	}
+	
+	return somme/N;
+	
+}
+
+Liststd findStudent(char* name, char* firstname, Liststd lst)
+{
+    Liststd present = lst;
+    while (present != NULL)
+    {
+        if (strcmp(present->std.name, name) == 0 && strcmp(present->std.firstName, firstname) == 0)
+        {
+            return present; 
+        }
+        present = present->next;
+    }
+    
+    return NULL; 
+}
+
+
+double AverageAllStudents(Liststd lst) {
+    double average = 0.0;
+    char worstStudent[30];
+    int count = 0;
+
+    Liststd current = lst;
+    while (current != NULL) {
+        average += moyTab(current->std.notes,NB_NOTES);
+        count++;
+        current = current->next;
+    }
+
+    if (count > 0) {
+        return average / count;
+    } else {
+        return 0.0; 
     }
 }
