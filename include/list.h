@@ -55,6 +55,8 @@ Liststd addStudent(Liststd lst);
 void print_listd(Liststd li);
 Bool is_listd_empty(Liststd li);
 void Listbygrp(Liststd lst, int grp);
+Liststd findStudent(char* name, char* firstname, Liststd lst);
+double moyTab(int* tab,int N);
+double AverageAllStudents(Liststd lst);
 
 #endif
-
